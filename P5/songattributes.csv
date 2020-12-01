@@ -1,4 +1,4 @@
-﻿Index,Title,Artist,Top Genre,Year,BeatsPerMinute,Energy,Danceability,Loudness,Liveness,Valence,Duration,Acousticness,Speechiness,Popularity
+﻿Index,Title,Artist,Genre,Year,BeatsPerMinute,Energy,Danceability,Loudness,Liveness,Valence,Duration,Acousticness,Speechiness,Popularity
 1,Sunrise,Norah Jones,adult standards,2004,157,30,53,-14,11,68,201,94,3,71
 2,Black Night,Deep Purple,album rock,2000,135,79,50,-11,17,81,207,17,7,39
 3,Clint Eastwood,Gorillaz,alternative hip hop,2001,168,69,66,-9,7,52,341,2,17,69
