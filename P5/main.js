@@ -1,5 +1,5 @@
-var width = 500;
-var height = 500;
+var width = 900;
+var height = 900;
 
 d3.csv("songattributes.csv", function (csv) {
   for (var i = 0; i < csv.length; ++i) {
@@ -12,6 +12,8 @@ d3.csv("songattributes.csv", function (csv) {
     csv[i].Acousticness = Number(csv[i].Acousticness);
     csv[i].Speechiness = Number(csv[i].Speechiness);
     csv[i].Popularity = Number(csv[i].Popularity);
+    csv[i].Title = csv[i].Title;
+    csv[i].Artist = csv[i].Artist;
   }
 
   // CSV[i] = four attributes to it
@@ -25,8 +27,8 @@ d3.csv("songattributes.csv", function (csv) {
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
   // Axis setup
-  var xScale = d3.scaleLinear().domain(beatsExtent).range([50, 470]);
-  var yScale = d3.scaleLinear().domain(popularityExtent).range([470, 30]);
+  var xScale = d3.scaleLinear().domain(beatsExtent).range([0, 950]);
+  var yScale = d3.scaleLinear().domain(popularityExtent).range([0, 950]);
 
   var xAxis = d3.axisBottom().scale(xScale);
   var yAxis = d3.axisLeft().scale(yScale);
@@ -90,11 +92,11 @@ d3.csv("songattributes.csv", function (csv) {
     ADD BRUSHING CODE HERE
 
    ******************************************/
-  chart1
-    .call(d3.brush()                 // Add the brush feature using the d3.brush function
-      .extent([[0, 0], [width, height]]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-      .on("start brush", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
-    )
+  // chart1
+  //   .call(d3.brush()                 // Add the brush feature using the d3.brush function
+  //     .extent([[0, 0], [width, height]]) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+  //     .on("start brush", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+  //   )
 
   // chart2
   // .call(d3.brush()                 // Add the brush feature using the d3.brush function
@@ -151,18 +153,18 @@ d3.csv("songattributes.csv", function (csv) {
       return yScale(d.Popularity);
     })
     .attr("r", 5)
-    // .on("click", function (d, i) {
-    //   var chart1 = document.getElementById("chart1");
-    //   var circles = chart1.getElementsByTagName("circle");
-    //   // circles[i].classed("selected2", true);
-    //   // circles[i].style.fill = "orange";
-    //   circles[i].style.opacity = .5;
-    //   document.getElementById('Fat').innerHTML = d.Fat
-    //   document.getElementById('Carb').innerHTML = d.Carb
-    //   document.getElementById('Fiber').innerHTML = d.Fiber
-    //   document.getElementById('Protein').innerHTML = d.Protein
-    //   // document.getElementById(i).style.fill = "pink";
-    // })
+    .on("click", function (d, i) {
+      var chart1 = document.getElementById("chart1");
+      var circles = chart1.getElementsByTagName("circle");
+      // circles[i].classed("selected2", true);
+      // circles[i].style.fill = "orange";
+      // circles[i].style.opacity = .5;
+      document.getElementById('Title').innerHTML = d.Title
+      document.getElementById('Artist').innerHTML = d.Artist
+      document.getElementById('BPM').innerHTML = d.BeatsPerMinute
+      document.getElementById('Popularity').innerHTML = d.Popularity
+      // document.getElementById(i).style.fill = "pink";
+    })
     ;
 
   chart1 // or something else that selects the SVG element in your visualizations
