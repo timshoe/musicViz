@@ -1,12 +1,17 @@
 var width = 500;
 var height = 500;
 
-d3.csv("starbucksfoods.csv", function (csv) {
+d3.csv("songattributes.csv", function (csv) {
   for (var i = 0; i < csv.length; ++i) {
-    csv[i].Fat = Number(csv[i].Fat);
-    csv[i].Carb = Number(csv[i].Carb);
-    csv[i].Fiber = Number(csv[i].Fiber);
-    csv[i].Protein = Number(csv[i].Protein);
+    csv[i].BeatsPerMinute = Number(csv[i].BeatsPerMinute);
+    csv[i].Energy = Number(csv[i].Energy);
+    csv[i].Danceability = Number(csv[i].Danceability);
+    csv[i].Liveness = Number(csv[i].Liveness);
+    csv[i].Valence = Number(csv[i].Valence);
+    csv[i].Duration = Number(csv[i].Duration);
+    csv[i].Acousticness = Number(csv[i].Acousticness);
+    csv[i].Speechiness = Number(csv[i].Speechiness);
+    csv[i].Popularity = Number(csv[i].Popularity);
   }
 
   // CSV[i] = four attributes to it
