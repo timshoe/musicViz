@@ -2,6 +2,15 @@
 //* All work & code contributed solely by Liam Fernandez */
 window.onload = start;
 var sourceOfTruth = [];
+var currentXscale, currXaxis,mainGraphPointer;
+var width = 900;
+var height = 700;
+var margin = {
+  top: 30,
+  bottom: 30,
+  left: 50,
+  right: 50
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +26,47 @@ function grabAxis() {
 }
 
 function drawGraph() {
+  var whichAxis = grabAxis();
+  console.log('Attribute to plot among the X -> ' + String(whichAxis));
+
+  // Handle X-Axis creation
+  if (whichAxis == "Year") {
+    currentXscale.domain([d3.min(sourceOfTruth, function(d) {
+      return d[whichAxis];
+    }) 
+    , 
+    d3.max(sourceOfTruth, function(d) {
+      return d[whichAxis];
+    })]); 
+    mainGraphPointer.append("g")
+      .attr("class", "x axis")
+      .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
+      .call(d3.axisBottom(currentXscale)
+              .tickFormat(d3.format("d"))
+        );
+  } else {
+    currentXscale.domain([0, d3.max(sourceOfTruth, function(d) {
+      return d[whichAxis];
+    })]); 
+    mainGraphPointer.append("g")
+      .attr("class", "x axis")
+      .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
+      .call(currXaxis);
+  }
+
+    
+
+  var oldAxis = document.getElementsByClassName("x axis");
+  if (oldAxis.length > 1) {
+    oldAxis[0].remove();
+    console.log("Removing the element");
+  }
+
+
+  // for (var i = 0; i < 10;i++) {
+  //   console.log('Item: ' + sourceOfTruth[i][whichAxis]);
+  // }
+
 
 }
 
@@ -33,17 +83,7 @@ function drawGraph() {
 
 /* MAIN FUNCTION */
 function start() {
-  var width = 900;
-  var height = 700;
-
-  var margin = {
-    top: 30,
-    bottom: 30,
-    left: 50,
-    right: 50
-  }
-
-
+  
   var graph = document.getElementById('graph');
 
 
@@ -77,7 +117,11 @@ function start() {
     csv.Popularity = Number(csv.Popularity);
     return csv;
   } , function (error, data) {
+    mainGraphPointer = mainGraph;
     sourceOfTruth = data;
+    currentXscale = xScale;
+    currXaxis = xAxis;
+
     console.log("Line 2 test of source of truth: " + sourceOfTruth[1]);
 
 
