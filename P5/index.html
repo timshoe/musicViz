@@ -8,17 +8,17 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
    	</head>
    	<body>
+		   <h1>~Music Correlations~</h1>
 	   	<div id="wrapper">
-			<div id="chart1">
+			<div id="graph" class="graph">
 			</div>
-		  	<div id="chart2">
-	        </div>
-		  	<div id="chart3">
-		        <strong>Fat Value:</strong> <span id="Fat"></span><br/>
-		        <strong>Carb Value:</strong> <span id="Carb"></span><br/>
-		        <strong>Fiber Value:</strong> <span id="Fiber"></span><br />
-		        <strong>Protein Value:</strong> <span id="Protein"></span><br />
-	        </div>
+			<div id = "inputs" class = "inputs"> 
+				<select  id="xaxis" onchange="drawGraph()">
+					<option selected value = "Year">Year</option>
+					<option value = "BeatsPerMinute">BPM</option>
+					<option value = "Danceability">Danceability</option>
+				</select>
+			</div>
 	   	</div>
 	</body>
 </html>
