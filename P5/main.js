@@ -80,7 +80,7 @@ function drawGraph() {
   console.log('Attribute to plot among the X -> ' + String(whichAxis));
 
   // Handle X-Axis creation
-  // if (whichAxis == "Year") {
+  if (whichAxis != "Year") {
     currentXscale.domain([d3.min(sourceOfTruth, function(d) {
       return d[whichAxis];
     }) 
@@ -91,18 +91,19 @@ function drawGraph() {
     mainGraphPointer.append("g")
       .attr("class", "x axis")
       .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
+      .call(currXaxis);
+  } else {
+    currentXscale.domain([1999, d3.max(sourceOfTruth, function(d) {
+      return d[whichAxis];
+    }) + 1]); 
+    mainGraphPointer.append("g")
+      .attr("class", "x axis")
+      .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
       .call(d3.axisBottom(currentXscale)
+              .ticks(20)
               .tickFormat(d3.format("d"))
         );
-  // } else {
-  //   currentXscale.domain([0, d3.max(sourceOfTruth, function(d) {
-  //     return d[whichAxis];
-  //   })]); 
-  //   mainGraphPointer.append("g")
-  //     .attr("class", "x axis")
-  //     .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
-  //     .call(currXaxis);
-  // }    
+  }    
   changeAxis(); // DO NOT REMOVE
 
   if (document.getElementsByClassName("circle").length > 1) {
