@@ -2,7 +2,7 @@
 //* All work & code contributed solely by Liam Fernandez */
 window.onload = start;
 var sourceOfTruth = [];
-var currentXscale, currXaxis,mainGraphPointer;
+var currentXscale, currYscale, currXaxis,mainGraphPointer;
 var width = 900;
 var height = 700;
 var margin = {
@@ -11,6 +11,16 @@ var margin = {
   left: 50,
   right: 50
 };
+
+var dotColors = {
+  Pop: "DarkMagenta",
+  Rock: "Crimson",
+  Indie: "DarkCyan",
+  Alternative: "Indigo",
+  Soul: "LightGreen",
+  Other: "MediumOrchid"
+}
+dotColors["Hip Hop"] = "DodgerBlue";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -25,12 +35,42 @@ function grabAxis() {
   return choice;
 }
 
+function changeAxis() {
+  var oldAxis = document.getElementsByClassName("x axis");
+  if (oldAxis.length > 1) {
+    oldAxis[0].remove();
+    console.log("Removing the element");
+  }
+}
+
+function translateGenre(genre) {
+  var categoryToReturn;
+
+  if (genre.includes("boy band") || genre.includes("pop")) {
+    categoryToReturn = "Pop";
+  } else if (genre.includes("alternative")) {
+    categoryToReturn = "Alternative";
+  } else if (genre.includes("rock")) {
+    categoryToReturn = "Rock";
+  } else if (genre.includes("rap") || genre.includes("hip hop")) {
+    categoryToReturn = "Hip Hop";
+  } else if (genre.includes("indie") || genre.includes("folk")) {
+    categoryToReturn = "Indie";
+  } else if (genre.includes("soul")) {
+    categoryToReturn = "Soul";
+  } else {
+    categoryToReturn = "Other";
+  }
+  return categoryToReturn;
+
+}
+
 function drawGraph() {
   var whichAxis = grabAxis();
   console.log('Attribute to plot among the X -> ' + String(whichAxis));
 
   // Handle X-Axis creation
-  if (whichAxis == "Year") {
+  if (whichAxis != "Year") {
     currentXscale.domain([d3.min(sourceOfTruth, function(d) {
       return d[whichAxis];
     }) 
@@ -41,31 +81,60 @@ function drawGraph() {
     mainGraphPointer.append("g")
       .attr("class", "x axis")
       .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
-      .call(d3.axisBottom(currentXscale)
-              .tickFormat(d3.format("d"))
-        );
+      .call(currXaxis);
   } else {
-    currentXscale.domain([0, d3.max(sourceOfTruth, function(d) {
+    currentXscale.domain([1999, d3.max(sourceOfTruth, function(d) {
       return d[whichAxis];
-    })]); 
+    }) + 1]); 
     mainGraphPointer.append("g")
       .attr("class", "x axis")
       .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
-      .call(currXaxis);
+      .call(d3.axisBottom(currentXscale)
+              .ticks(20)
+              .tickFormat(d3.format("d"))
+        );
+  }    
+  changeAxis(); // DO NOT REMOVE -- End of creating x axis
+
+
+  //Start of code to plot dots
+  if (document.getElementsByClassName("circle").length > 1) {
+    mainGraphPointer
+      .selectAll("circle")
+      .remove();
   }
 
-    
-
-  var oldAxis = document.getElementsByClassName("x axis");
-  if (oldAxis.length > 1) {
-    oldAxis[0].remove();
-    console.log("Removing the element");
+  for (a in sourceOfTruth) {
+    console.log(a["category"]);
   }
 
+  var circles1 = mainGraphPointer
+      .selectAll("circle")
+      .data(sourceOfTruth)
+      .enter()
+      .append("circle")
+      .attr("class", "circle")
+      .attr("id", function (d, i) {
+        return i;
+      })
+      .attr("fill", function (d) {
+        console.log("Category -> " + d.category)
+        return dotColors[d["category"]];
+      })
+      .attr("stroke", "black")
+      .attr("cx", function (d) {
+        if (d.Year > 1999) {
+          return currentXscale(d[whichAxis]);
+        }
+      })
+      .attr("cy", function (d) {
+        if (d.Year > 1999) {
+          return currYscale(d.Popularity);
 
-  // for (var i = 0; i < 10;i++) {
-  //   console.log('Item: ' + sourceOfTruth[i][whichAxis]);
-  // }
+        }
+      })
+      .attr("r", 4);
+      //End of code to plot points
 
 
 }
@@ -105,6 +174,7 @@ function start() {
   d3.csv("./songattributes.csv", function (csv) {
     csv.Title = String(csv.Title);
     csv.Artist = String(csv.Artist);
+    csv.Genre = String(csv.Genre);
     csv.Year = Number(csv.Year); // This is default x-axis value
     csv.BeatsPerMinute = Number(csv.BeatsPerMinute);
     csv.Energy = Number(csv.Energy);
@@ -115,14 +185,16 @@ function start() {
     csv.Acousticness = Number(csv.Acousticness);
     csv.Speechiness = Number(csv.Speechiness);
     csv.Popularity = Number(csv.Popularity);
+    csv["category"] = translateGenre(String(csv.Genre));
     return csv;
   } , function (error, data) {
     mainGraphPointer = mainGraph;
     sourceOfTruth = data;
     currentXscale = xScale;
     currXaxis = xAxis;
+    currYscale = yScale;
 
-    console.log("Line 2 test of source of truth: " + sourceOfTruth[1]);
+    console.log("Line 2 test of source of truth: " + sourceOfTruth[1].category);
 
 
 
