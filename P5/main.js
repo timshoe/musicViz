@@ -2,7 +2,7 @@
 //* All work & code contributed solely by Liam Fernandez */
 window.onload = start;
 var sourceOfTruth = [];
-var currentXscale, currYscale, currXaxis,mainGraphPointer;
+var currentXscale, currYscale, currXaxis, mainGraphPointer;
 var width = 900;
 var height = 700;
 var margin = {
@@ -71,29 +71,29 @@ function drawGraph() {
 
   // Handle X-Axis creation
   if (whichAxis != "Year") {
-    currentXscale.domain([d3.min(sourceOfTruth, function(d) {
+    currentXscale.domain([d3.min(sourceOfTruth, function (d) {
       return d[whichAxis];
-    }) 
-    , 
-    d3.max(sourceOfTruth, function(d) {
+    })
+      ,
+    d3.max(sourceOfTruth, function (d) {
       return d[whichAxis];
-    })]); 
+    })]);
     mainGraphPointer.append("g")
       .attr("class", "x axis")
-      .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
+      .attr('transform', 'translate(0,' + (height - margin.top - margin.bottom + 30) + ')')
       .call(currXaxis);
   } else {
-    currentXscale.domain([1999, d3.max(sourceOfTruth, function(d) {
+    currentXscale.domain([1999, d3.max(sourceOfTruth, function (d) {
       return d[whichAxis];
-    }) + 1]); 
+    }) + 1]);
     mainGraphPointer.append("g")
       .attr("class", "x axis")
-      .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
+      .attr('transform', 'translate(0,' + (height - margin.top - margin.bottom + 30) + ')')
       .call(d3.axisBottom(currentXscale)
-              .ticks(20)
-              .tickFormat(d3.format("d"))
-        );
-  }    
+        .ticks(20)
+        .tickFormat(d3.format("d"))
+      );
+  }
   changeAxis(); // DO NOT REMOVE -- End of creating x axis
 
 
@@ -109,34 +109,32 @@ function drawGraph() {
   }
 
   var circles1 = mainGraphPointer
-      .selectAll("circle")
-      .data(sourceOfTruth)
-      .enter()
-      .append("circle")
-      .attr("class", "circle")
-      .attr("id", function (d, i) {
-        return i;
-      })
-      .attr("fill", function (d) {
-        console.log("Category -> " + d.category)
-        return dotColors[d["category"]];
-      })
-      .attr("stroke", "black")
-      .attr("cx", function (d) {
-        if (d.Year > 1999) {
-          return currentXscale(d[whichAxis]);
-        }
-      })
-      .attr("cy", function (d) {
-        if (d.Year > 1999) {
-          return currYscale(d.Popularity);
+    .selectAll("circle")
+    .data(sourceOfTruth)
+    .enter()
+    .append("circle")
+    .attr("class", "circle")
+    .attr("id", function (d, i) {
+      return i;
+    })
+    .attr("fill", function (d) {
+      console.log("Category -> " + d.category)
+      return dotColors[d["category"]];
+    })
+    .attr("stroke", "black")
+    .attr("cx", function (d) {
+      if (d.Year > 1999) {
+        return currentXscale(d[whichAxis]);
+      }
+    })
+    .attr("cy", function (d) {
+      if (d.Year > 1999) {
+        return currYscale(d.Popularity);
 
-        }
-      })
-      .attr("r", 4);
-      //End of code to plot points
-
-
+      }
+    })
+    .attr("r", 4);
+  //End of code to plot points
 }
 
 
@@ -152,14 +150,50 @@ function drawGraph() {
 
 /* MAIN FUNCTION */
 function start() {
-  
+   var legend = document.getElementById('legend');
+   var Svg = d3.select(legend)
+    .append('Svg')
+    .attr('width', 500)
+    .attr('height', 500)
+   // create a list of keys
+   var keys = ["DarkMagenta", "Crimson", "DarkCyan", "Indigo", "LightGreen","MediumOrchid"]
+   var vals = Object.keys(dotColors).map(function(key){
+     return dotColors[key];
+   });
+   // Usually you have a color scale in your chart already
+   var color = d3.scaleOrdinal()
+     .domain(keys)
+     .range(vals);
+ 
+   // Add one dot in the legend for each name.
+   Svg.selectAll("mydots")
+     .data(keys)
+     .enter()
+     .append("circle")
+     .attr("cx", 100)
+     .attr("cy", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
+     .attr("r", 7)
+     .style("fill", function (d) { return color(d) })
+ 
+   // Add one dot in the legend for each name.
+   Svg.selectAll("mylabels")
+     .data(keys)
+     .enter()
+     .append("text")
+     .attr("x", 120)
+     .attr("y", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
+     .style("fill", function (d) { return color(d) })
+     .text(function (d) { return d })
+     .attr("text-anchor", "left")
+     .style("alignment-baseline", "middle")
+
   var graph = document.getElementById('graph');
 
 
   var svg = d3.select(graph)
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height);
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height);
 
   var mainGraph = svg.append('g')
     .attr('width', width - margin.left - margin.left)
@@ -187,7 +221,7 @@ function start() {
     csv.Popularity = Number(csv.Popularity);
     csv["category"] = translateGenre(String(csv.Genre));
     return csv;
-  } , function (error, data) {
+  }, function (error, data) {
     mainGraphPointer = mainGraph;
     sourceOfTruth = data;
     currentXscale = xScale;
@@ -199,19 +233,19 @@ function start() {
 
 
     // ! Set up Y-axis before drawing graph
-    yScale.domain([0, d3.max(data, function(d) {
+    yScale.domain([0, d3.max(data, function (d) {
       return d.Popularity;
     }) + 5]);
     // yScale.domain
 
     mainGraph.append('g')
       .attr('class', 'y axis')
-      .attr('transform', 'translate('+ margin.left+',0)')
+      .attr('transform', 'translate(' + margin.left + ',0)')
       .call(yAxis)
       .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 7)
-      .attr("x", -(5* margin.left))
+      .attr("x", -(5 * margin.left))
       .attr("dy", "-3.3em")
       .attr("stroke", "purple")
       .attr("fill", "black")
@@ -219,8 +253,7 @@ function start() {
       .text("Popularity of Song");
 
     drawGraph();
-  });
-    
+  }); 
 }
 // d3.csv("./songattributes.csv", function (csv) {
 //   for (var i = 0; i < csv.length; ++i) {
