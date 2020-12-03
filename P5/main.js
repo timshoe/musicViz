@@ -146,8 +146,6 @@ function drawGraph() {
 
 
 
-
-
 /* MAIN FUNCTION */
 function start() {
    var legend = document.getElementById('legend');
