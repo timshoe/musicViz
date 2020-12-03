@@ -45,31 +45,21 @@ function changeAxis() {
 
 function translateGenre(genre) {
   var categoryToReturn;
-  switch (genre){
-    case (genre.includes("boy band")):
-    case (genre.includes("pop")):
-      categoryToReturn = "Pop";
-      break;
-    case (genre.includes("alternative")):
-      categoryToReturn = "Alternative";
-      break;
-    case (genre.includes("rock")):
-      categoryToReturn = "Rock";
-      break;
-    case (genre.includes("rap")):  
-    case (genre.includes("hip hop")):
-      categoryToReturn = "Hip Hop";
-      break;
-    case (genre.includes("folk")):
-    case (genre.includes("indie")):
-      categoryToReturn = "Indie";
-      break;
-  case (genre.includes("soul")):
+
+  if (genre.includes("boy band") || genre.includes("pop")) {
+    categoryToReturn = "Pop";
+  } else if (genre.includes("alternative")) {
+    categoryToReturn = "Alternative";
+  } else if (genre.includes("rock")) {
+    categoryToReturn = "Rock";
+  } else if (genre.includes("rap") || genre.includes("hip hop")) {
+    categoryToReturn = "Hip Hop";
+  } else if (genre.includes("indie") || genre.includes("folk")) {
+    categoryToReturn = "Indie";
+  } else if (genre.includes("soul")) {
     categoryToReturn = "Soul";
-    break;
-    default:
-      categoryToReturn = "Other";
-      break;
+  } else {
+    categoryToReturn = "Other";
   }
   return categoryToReturn;
 
@@ -104,12 +94,18 @@ function drawGraph() {
               .tickFormat(d3.format("d"))
         );
   }    
-  changeAxis(); // DO NOT REMOVE
+  changeAxis(); // DO NOT REMOVE -- End of creating x axis
 
+
+  //Start of code to plot dots
   if (document.getElementsByClassName("circle").length > 1) {
     mainGraphPointer
       .selectAll("circle")
       .remove();
+  }
+
+  for (a in sourceOfTruth) {
+    console.log(a["category"]);
   }
 
   var circles1 = mainGraphPointer
@@ -121,7 +117,10 @@ function drawGraph() {
       .attr("id", function (d, i) {
         return i;
       })
-      .attr("fill", "black")
+      .attr("fill", function (d) {
+        console.log("Category -> " + d.category)
+        return dotColors[d["category"]];
+      })
       .attr("stroke", "black")
       .attr("cx", function (d) {
         if (d.Year > 1999) {
@@ -134,9 +133,8 @@ function drawGraph() {
 
         }
       })
-      .attr("r", 5);
-
-      
+      .attr("r", 4);
+      //End of code to plot points
 
 
 }
