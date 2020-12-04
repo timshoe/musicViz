@@ -125,7 +125,11 @@ function drawGraph() {
   removeOldDots();
   var circles1 = mainGraphPointer
       .selectAll("circle")
-      .data(sourceOfTruth)
+      .data(sourceOfTruth.filter(function (d) {
+        if (d.Year > 1999) {
+          return d;
+        }
+      }))
       .enter()
       .append("circle")
       .attr("class", "circle")
@@ -138,15 +142,10 @@ function drawGraph() {
       })
       .attr("stroke", "black")
       .attr("cx", function (d) {
-        if (d.Year > 1999) {
           return currentXscale(d[whichAxis]);
-        }
       })
       .attr("cy", function (d) {
-        if (d.Year > 1999) {
           return currYscale(d.Popularity);
-
-        }
       })
       .attr("r", 4)
       //End of code to plot points
