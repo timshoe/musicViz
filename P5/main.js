@@ -133,6 +133,90 @@ function drawGraph() {
     })
     .attr("r", 4);
   //End of code to plot points
+
+
+  var div = d3
+    .select("#graph")
+    .append("div")
+    .attr("class", "song-info")
+    .style("opacity", 0);
+
+  var div2 = d3
+    .select("#graph")
+    .append("div")
+    .attr("class", "all-song-info")
+    .attr("x", 1000)
+    .style("opacity", 0);
+
+
+  removeOldDots();
+  var circles1 = mainGraphPointer
+      .selectAll("circle")
+      .data(sourceOfTruth)
+      .enter()
+      .append("circle")
+      .attr("class", "circle")
+      .attr("id", function (d, i) {
+        return i;
+      })
+      .attr("fill", function (d) {
+        console.log("Category -> " + d.category)
+        return dotColors[d["category"]];
+      })
+      .attr("stroke", "black")
+      .attr("cx", function (d) {
+        if (d.Year > 1999) {
+          return currentXscale(d[whichAxis]);
+        }
+      })
+      .attr("cy", function (d) {
+        if (d.Year > 1999) {
+          return currYscale(d.Popularity);
+
+        }
+      })
+      .attr("r", 4)
+      //End of code to plot points
+      .on('mouseover', function(d, i) {
+        d3.select(this).transition()
+               .duration('50')
+               .attr('opacity', '.85');
+
+        div.transition()
+        .duration(50)
+        .style("opacity", 1);
+
+        div.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist)
+               .style("left", (d3.event.pageX + 10) + "px")
+               .style("top", (d3.event.pageY - 15) + "px");
+        
+      })
+      .on('mouseout', function (d, i) {
+        d3.select(this).transition()
+               .duration('50')
+               .attr('opacity', '1');
+        div.transition()
+               .duration('50')
+               .style("opacity", 0);
+        
+      })
+      .on('click', function(d, i) {
+        div2.transition()
+        .duration(50)
+        .style("opacity", 1);
+
+        div2.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist + "<br>" + "Genre: " + d.Genre 
+          + "<br>" + "Year: " + d.Year + "<br>" + "Beats per Minute: " + d.BeatsPerMinute + "<br>" 
+          + "Energy: " + d.Energy + "<br>" + "Danceability: " + d.Danceability + "<br>" + "Liveness: "
+          + d.Liveness + "<br>" + "Valence: " + d.Valence + "<br>" + "Duration: " + d.Duration + "<br>"
+          + "Acousticness: " + d.Acousticness + "<br>" + "Speechiness: " + d.Speechiness + "<br>"
+          + "Popularity: " + d.Popularity)
+              //  .style("right", 400 + "px")
+              //  .style("top", 100 + "px");
+      })
+      
+      ;
+
 }
 
 
