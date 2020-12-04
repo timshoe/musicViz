@@ -13,7 +13,7 @@ var margin = {
 };
 
 var dotColors = {
-  Pop: "DarkMagenta",
+  Pop: "SandyBrown",
   Rock: "Crimson",
   Indie: "DarkCyan",
   Alternative: "Indigo",
