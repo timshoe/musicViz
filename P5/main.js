@@ -27,7 +27,13 @@ dotColors["Hip Hop"] = "DodgerBlue";
 /*                        HELPER FUNCTIONS                   */
 
 ////////////////////////////////////////////////////////////////////////////////
-
+function removeOldDots() {
+  if(document.getElementsByClassName("circle").length > 1) {
+    mainGraphPointer
+      .selectAll("circle")
+      .remove();
+  } 
+}
 
 function grabAxis() {
   var axisChoiceBox = d3.select('#xaxis').node();
@@ -71,6 +77,7 @@ function drawGraph() {
 
   // Handle X-Axis creation
   if (whichAxis != "Year") {
+
     currentXscale.domain([d3.min(sourceOfTruth, function(d) {
       return d[whichAxis];
     }) 
@@ -82,6 +89,7 @@ function drawGraph() {
       .attr("class", "x axis")
       .attr('transform', 'translate(0,'  + (height - margin.top - margin.bottom + 30) + ')')
       .call(currXaxis);
+
   } else {
     currentXscale.domain([1999, d3.max(sourceOfTruth, function(d) {
       return d[whichAxis];
@@ -98,15 +106,7 @@ function drawGraph() {
 
 
   //Start of code to plot dots
-  if (document.getElementsByClassName("circle").length > 1) {
-    mainGraphPointer
-      .selectAll("circle")
-      .remove();
-  }
 
-  for (a in sourceOfTruth) {
-    console.log(a["category"]);
-  }
 
   var div = d3
     .select("#graph")
@@ -121,6 +121,8 @@ function drawGraph() {
     .attr("x", 1000)
     .style("opacity", 0);
 
+
+  removeOldDots();
   var circles1 = mainGraphPointer
       .selectAll("circle")
       .data(sourceOfTruth)
@@ -252,7 +254,7 @@ function start() {
     // ! Set up Y-axis before drawing graph
     yScale.domain([0, d3.max(data, function(d) {
       return d.Popularity;
-    }) + 5]);
+    }) ]);
     // yScale.domain
 
     mainGraph.append('g')
@@ -268,130 +270,16 @@ function start() {
       .attr("fill", "black")
       .attr("stroke-width", 0.5)
       .text("Popularity of Song");
+      //Making the lines that go right of the x axis || GRID LINES
+      mainGraph.append('g')
+        .call(d3.axisLeft(yScale).ticks(10).tickSize(-width + (margin.right* 2)))
+          .attr("opacity", 0.2)
+          .attr("transform", "translate("+ margin.left+",0 )")
+          .selectAll(".tick text")
+            .attr("font-size", "0");
+
 
     drawGraph();
   });
-  
+    
 }
-
-// d3.csv("./songattributes.csv", function (csv) {
-//   for (var i = 0; i < csv.length; ++i) {
-//     csv[i].Title = String(csv[i].Title);
-//     csv[i].Artist = String(csv[i].Artist);
-//     csv[i].Year = Number(csv[i].Year); // This is default x-axis value
-//     csv[i].BeatsPerMinute = Number(csv[i].BeatsPerMinute);
-//     csv[i].Energy = Number(csv[i].Energy);
-//     csv[i].Danceability = Number(csv[i].Danceability);
-//     csv[i].Liveness = Number(csv[i].Liveness);
-//     csv[i].Valence = Number(csv[i].Valence);
-//     csv[i].Duration = Number(csv[i].Duration);
-//     csv[i].Acousticness = Number(csv[i].Acousticness);
-//     csv[i].Speechiness = Number(csv[i].Speechiness);
-//     csv[i].Popularity = Number(csv[i].Popularity);
-//   }
-
-//   // CSV[i] = four attributes to it
-//   // COMPLETE THESE FUNCTIONS TO SEE THE SCATTERPLOTS +++++++++++++++
-//   var fatExtent = d3.extent(csv, function (row) {
-//     return row.Fat;
-//   });
-//   var carbExtent = d3.extent(csv, function (row) {
-//     return row.Carb;
-//   });
-//   var fiberExtent = d3.extent(csv, function (row) {
-//     return row.Fiber;
-//   });
-//   var proteinExtent = d3.extent(csv, function (row) {
-//     return row.Protein;
-//   });
-//   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-//   // Axis setup
-//   var xScale = d3.scaleLinear().domain(fatExtent).range([50, 470]);
-//   var yScale = d3.scaleLinear().domain(carbExtent).range([470, 30]);
-
-//   var xAxis = d3.axisBottom().scale(xScale);
-//   var yAxis = d3.axisLeft().scale(yScale);
-
-//   function createGraph(chart1) {
-//     chart1
-//       .selectAll("circle")
-//       .data(csv)
-//       .enter()
-//       .append("circle")
-//       .attr("id", function (d, i) {
-//         return i;
-//       })
-//       .attr("stroke", "black")
-//       .attr("cx", function (d) {
-//         return xScale(d.Fat);
-//       })
-//       .attr("cy", function (d) {
-//         return yScale(d.Carb);
-//       })
-//       .attr("r", 5)
-//       .attr("change", function (d, i) {
-//         document.getElementById(i).style.fill = "black";
-//       });
-//   }
-//   //Create SVGs for charts
-//   var chart1 = d3
-//     .select("#chart1")
-//     .append("svg:svg")
-//     .attr("width", width)
-//     .attr("height", height);
-
-//   //add scatterplot points
-//   var circles1 = chart1
-//     .selectAll("circle")
-//     .data(csv)
-//     .enter()
-//     .append("circle")
-//     .attr("id", function (d, i) {
-//       return i;
-//     })
-//     .attr("fill", "black")
-//     .attr("stroke", "black")
-//     .attr("cx", function (d) {
-//       return xScale(d.Fat);
-//     })
-//     .attr("cy", function (d) {
-//       return yScale(d.Carb);
-//     })
-//     .attr("r", 5)
-//     .on("click", function (d, i) {
-//       var chart1 = document.getElementById("chart1");
-//       var circles = chart1.getElementsByTagName("circle");
-//       // circles[i].classed("selected2", true);
-//       // circles[i].style.fill = "orange";
-//       circles[i].style.opacity = .5;
-//       document.getElementById('Fat').innerHTML = d.Fat
-//       document.getElementById('Carb').innerHTML = d.Carb
-//       document.getElementById('Fiber').innerHTML = d.Fiber
-//       document.getElementById('Protein').innerHTML = d.Protein
-//       // document.getElementById(i).style.fill = "pink";
-//     });
-
-
-//   chart1 // or something else that selects the SVG element in your visualizations
-//     .append("g") // create a group node
-//     .attr("transform", "translate(0," + (width - 30) + ")")
-//     .call(xAxis) // call the axis generator
-//     .append("text")
-//     .attr("class", "label")
-//     .attr("x", width - 16)
-//     .attr("y", -6)
-//     .style("text-anchor", "end")
-//     ;
-
-//   chart1 // or something else that selects the SVG element in your visualizations
-//     .append("g") // create a group node
-//     .attr("transform", "translate(50, 0)")
-//     .call(yAxis)
-//     .append("text")
-//     .attr("class", "label")
-//     .attr("transform", "rotate(-90)")
-//     .attr("y", 6)
-//     .attr("dy", ".71em")
-//     .style("text-anchor", "end");
-// });
