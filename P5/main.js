@@ -27,7 +27,13 @@ dotColors["Hip Hop"] = "DodgerBlue";
 /*                        HELPER FUNCTIONS                   */
 
 ////////////////////////////////////////////////////////////////////////////////
-
+function removeOldDots() {
+  if(document.getElementsByClassName("circle").length > 1) {
+    mainGraphPointer
+      .selectAll("circle")
+      .remove();
+  } 
+}
 
 function grabAxis() {
   var axisChoiceBox = d3.select('#xaxis').node();
@@ -82,6 +88,7 @@ function drawGraph() {
       .attr("class", "x axis")
       .attr('transform', 'translate(0,' + (height - margin.top - margin.bottom + 30) + ')')
       .call(currXaxis);
+
   } else {
     currentXscale.domain([1999, d3.max(sourceOfTruth, function (d) {
       return d[whichAxis];
@@ -98,16 +105,7 @@ function drawGraph() {
 
 
   //Start of code to plot dots
-  if (document.getElementsByClassName("circle").length > 1) {
-    mainGraphPointer
-      .selectAll("circle")
-      .remove();
-  }
-
-  for (a in sourceOfTruth) {
-    console.log(a["category"]);
-  }
-
+  removeOldDots();
   var circles1 = mainGraphPointer
     .selectAll("circle")
     .data(sourceOfTruth)
@@ -233,7 +231,7 @@ function start() {
     // ! Set up Y-axis before drawing graph
     yScale.domain([0, d3.max(data, function (d) {
       return d.Popularity;
-    }) + 5]);
+    }) ]);
     // yScale.domain
 
     mainGraph.append('g')
@@ -249,6 +247,14 @@ function start() {
       .attr("fill", "black")
       .attr("stroke-width", 0.5)
       .text("Popularity of Song");
+      //Making the lines that go right of the x axis || GRID LINES
+      mainGraph.append('g')
+        .call(d3.axisLeft(yScale).ticks(10).tickSize(-width + (margin.right* 2)))
+          .attr("opacity", 0.2)
+          .attr("transform", "translate("+ margin.left+",0 )")
+          .selectAll(".tick text")
+            .attr("font-size", "0");
+
 
     drawGraph();
   }); 
