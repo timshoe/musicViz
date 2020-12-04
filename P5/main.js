@@ -1,5 +1,5 @@
 
-//* All work & code contributed solely by Liam Fernandez */
+//* All work & code contributed solely by Liam Fernandez and Tim Xu*/
 window.onload = start;
 var sourceOfTruth = [];
 var currentXscale, currYscale, currXaxis, mainGraphPointer;
@@ -28,11 +28,11 @@ dotColors["Hip Hop"] = "DodgerBlue";
 
 ////////////////////////////////////////////////////////////////////////////////
 function removeOldDots() {
-  if(document.getElementsByClassName("circle").length > 1) {
+  if (document.getElementsByClassName("circle").length > 1) {
     mainGraphPointer
       .selectAll("circle")
       .remove();
-  } 
+  }
 }
 
 function grabAxis() {
@@ -151,71 +151,71 @@ function drawGraph() {
 
   removeOldDots();
   var circles1 = mainGraphPointer
-      .selectAll("circle")
-      .data(sourceOfTruth)
-      .enter()
-      .append("circle")
-      .attr("class", "circle")
-      .attr("id", function (d, i) {
-        return i;
-      })
-      .attr("fill", function (d) {
-        console.log("Category -> " + d.category)
-        return dotColors[d["category"]];
-      })
-      .attr("stroke", "black")
-      .attr("cx", function (d) {
-        if (d.Year > 1999) {
-          return currentXscale(d[whichAxis]);
-        }
-      })
-      .attr("cy", function (d) {
-        if (d.Year > 1999) {
-          return currYscale(d.Popularity);
+    .selectAll("circle")
+    .data(sourceOfTruth)
+    .enter()
+    .append("circle")
+    .attr("class", "circle")
+    .attr("id", function (d, i) {
+      return i;
+    })
+    .attr("fill", function (d) {
+      console.log("Category -> " + d.category)
+      return dotColors[d["category"]];
+    })
+    .attr("stroke", "black")
+    .attr("cx", function (d) {
+      if (d.Year > 1999) {
+        return currentXscale(d[whichAxis]);
+      }
+    })
+    .attr("cy", function (d) {
+      if (d.Year > 1999) {
+        return currYscale(d.Popularity);
 
-        }
-      })
-      .attr("r", 4)
-      //End of code to plot points
-      .on('mouseover', function(d, i) {
-        d3.select(this).transition()
-               .duration('50')
-               .attr('opacity', '.85');
+      }
+    })
+    .attr("r", 4)
+    //End of code to plot points
+    .on('mouseover', function (d, i) {
+      d3.select(this).transition()
+        .duration('50')
+        .attr('opacity', '.85');
 
-        div.transition()
+      div.transition()
         .duration(50)
         .style("opacity", 1);
 
-        div.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist)
-               .style("left", (d3.event.pageX + 10) + "px")
-               .style("top", (d3.event.pageY - 15) + "px");
-        
-      })
-      .on('mouseout', function (d, i) {
-        d3.select(this).transition()
-               .duration('50')
-               .attr('opacity', '1');
-        div.transition()
-               .duration('50')
-               .style("opacity", 0);
-        
-      })
-      .on('click', function(d, i) {
-        div2.transition()
+      div.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist)
+        .style("left", (d3.event.pageX + 10) + "px")
+        .style("top", (d3.event.pageY - 15) + "px");
+
+    })
+    .on('mouseout', function (d, i) {
+      d3.select(this).transition()
+        .duration('50')
+        .attr('opacity', '1');
+      div.transition()
+        .duration('50')
+        .style("opacity", 0);
+
+    })
+    .on('click', function (d, i) {
+      div2.transition()
         .duration(50)
         .style("opacity", 1);
 
-        div2.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist + "<br>" + "Genre: " + d.Genre 
-          + "<br>" + "Year: " + d.Year + "<br>" + "Beats per Minute: " + d.BeatsPerMinute + "<br>" 
-          + "Energy: " + d.Energy + "<br>" + "Danceability: " + d.Danceability + "<br>" + "Liveness: "
-          + d.Liveness + "<br>" + "Valence: " + d.Valence + "<br>" + "Duration: " + d.Duration + "<br>"
-          + "Acousticness: " + d.Acousticness + "<br>" + "Speechiness: " + d.Speechiness + "<br>"
-          + "Popularity: " + d.Popularity)
-              //  .style("right", 400 + "px")
-              //  .style("top", 100 + "px");
-      })
-      
-      ;
+      div2.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist + "<br>" + "Genre: " + d.Genre
+        + "<br>" + "Year: " + d.Year + "<br>" + "Beats per Minute: " + d.BeatsPerMinute + "<br>"
+        + "Energy: " + d.Energy + "<br>" + "Danceability: " + d.Danceability + "<br>" + "Liveness: "
+        + d.Liveness + "<br>" + "Valence: " + d.Valence + "<br>" + "Duration: " + d.Duration + "<br>"
+        + "Acousticness: " + d.Acousticness + "<br>" + "Speechiness: " + d.Speechiness + "<br>"
+        + "Popularity: " + d.Popularity)
+      //  .style("right", 400 + "px")
+      //  .style("top", 100 + "px");
+    })
+
+    ;
 
 }
 
@@ -230,42 +230,23 @@ function drawGraph() {
 
 /* MAIN FUNCTION */
 function start() {
-   var legend = document.getElementById('legend');
-   var Svg = d3.select(legend)
-    .append('Svg')
-    .attr('width', 500)
-    .attr('height', 500)
-   // create a list of keys
-   var keys = ["DarkMagenta", "Crimson", "DarkCyan", "Indigo", "LightGreen","MediumOrchid"]
-   var vals = Object.keys(dotColors).map(function(key){
-     return dotColors[key];
-   });
-   // Usually you have a color scale in your chart already
-   var color = d3.scaleOrdinal()
-     .domain(keys)
-     .range(vals);
- 
-   // Add one dot in the legend for each name.
-   Svg.selectAll("mydots")
-     .data(keys)
-     .enter()
-     .append("circle")
-     .attr("cx", 100)
-     .attr("cy", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
-     .attr("r", 7)
-     .style("fill", function (d) { return color(d) })
- 
-   // Add one dot in the legend for each name.
-   Svg.selectAll("mylabels")
-     .data(keys)
-     .enter()
-     .append("text")
-     .attr("x", 120)
-     .attr("y", function (d, i) { return 100 + i * 25 }) // 100 is where the first dot appears. 25 is the distance between dots
-     .style("fill", function (d) { return color(d) })
-     .text(function (d) { return d })
-     .attr("text-anchor", "left")
-     .style("alignment-baseline", "middle")
+  var s = d3.select("#my_dataviz")
+
+  s.append("text").attr("x", 105).attr("y", 10).text("Legend").style("font-size", "16px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 20).attr("cy", 30).attr("r", 6).style("fill", dotColors["Pop"])
+  s.append("text").attr("x", 30).attr("y", 30).text("Pop").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 20).attr("cy", 50).attr("r", 6).style("fill", dotColors["Rock"])
+  s.append("text").attr("x", 30).attr("y", 50).text("Rock").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 20).attr("cy", 70).attr("r", 6).style("fill", dotColors["Indie"])
+  s.append("text").attr("x", 30).attr("y", 70).text("Indie").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 100).attr("cy", 30).attr("r", 6).style("fill", dotColors["Alternative"])
+  s.append("text").attr("x", 110).attr("y", 30).text("Alternative").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 100).attr("cy", 50).attr("r", 6).style("fill", dotColors["Soul"])
+  s.append("text").attr("x", 110).attr("y", 50).text("Soul").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 100).attr("cy", 70).attr("r", 6).style("fill", dotColors["Other"])
+  s.append("text").attr("x", 110).attr("y", 70).text("Other").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 200).attr("cy", 30).attr("r", 6).style("fill", dotColors["Hip Hop"])
+  s.append("text").attr("x", 210).attr("y", 30).text("Hip Hop").style("font-size", "15px").attr("alignment-baseline", "middle")
 
   var graph = document.getElementById('graph');
 
@@ -315,7 +296,7 @@ function start() {
     // ! Set up Y-axis before drawing graph
     yScale.domain([0, d3.max(data, function (d) {
       return d.Popularity;
-    }) ]);
+    })]);
     // yScale.domain
 
     mainGraph.append('g')
@@ -331,17 +312,17 @@ function start() {
       .attr("fill", "black")
       .attr("stroke-width", 0.5)
       .text("Popularity of Song");
-      //Making the lines that go right of the x axis || GRID LINES
-      mainGraph.append('g')
-        .call(d3.axisLeft(yScale).ticks(10).tickSize(-width + (margin.right* 2)))
-          .attr("opacity", 0.2)
-          .attr("transform", "translate("+ margin.left+",0 )")
-          .selectAll(".tick text")
-            .attr("font-size", "0");
+    //Making the lines that go right of the x axis || GRID LINES
+    mainGraph.append('g')
+      .call(d3.axisLeft(yScale).ticks(10).tickSize(-width + (margin.right * 2)))
+      .attr("opacity", 0.2)
+      .attr("transform", "translate(" + margin.left + ",0 )")
+      .selectAll(".tick text")
+      .attr("font-size", "0");
 
 
     drawGraph();
-  }); 
+  });
 }
 
 // d3.csv("./songattributes.csv", function (csv) {
