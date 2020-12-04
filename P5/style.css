@@ -22,6 +22,10 @@ path.domain {
 	stroke: black;
 }
 
+.legend {
+	text-decoration: underline;
+}
+
 .axis {
 	font: 13px sans-serif;
   }

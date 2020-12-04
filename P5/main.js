@@ -27,6 +27,30 @@ dotColors["Hip Hop"] = "DodgerBlue";
 /*                        HELPER FUNCTIONS                   */
 
 ////////////////////////////////////////////////////////////////////////////////
+function createLegend() {
+  var s = d3.select("#my_dataviz")
+
+  var first = 35, mid = first+20, last = first + 40;
+
+  s.append("text").attr("x", 105).attr("class", "legend").attr("y", 12).text("Legend").style("font-size", "16px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 20).attr("cy", 30).attr("r", 6).style("fill", dotColors["Pop"])
+  s.append("text").attr("x", 30).attr("y", first).text("Pop").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 20).attr("cy", 50).attr("r", 6).style("fill", dotColors["Rock"])
+  s.append("text").attr("x", 30).attr("y", mid).text("Rock").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 20).attr("cy", 70).attr("r", 6).style("fill", dotColors["Indie"])
+  s.append("text").attr("x", 30).attr("y", last).text("Indie").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 100).attr("cy", 30).attr("r", 6).style("fill", dotColors["Alternative"])
+  s.append("text").attr("x", 110).attr("y", first).text("Alternative").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 100).attr("cy", 50).attr("r", 6).style("fill", dotColors["Soul"])
+  s.append("text").attr("x", 110).attr("y", mid).text("Soul").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 100).attr("cy", 70).attr("r", 6).style("fill", dotColors["Other"])
+  s.append("text").attr("x", 110).attr("y", last).text("Other").style("font-size", "15px").attr("alignment-baseline", "middle")
+  s.append("circle").attr("cx", 200).attr("cy", 30).attr("r", 6).style("fill", dotColors["Hip Hop"])
+  s.append("text").attr("x", 210).attr("y", first).text("Hip Hop").style("font-size", "15px").attr("alignment-baseline", "middle")
+
+  s.attr("transform", "translate(" +  width / 3+" , 30)");
+}
+
 function removeOldDots() {
   if (document.getElementsByClassName("circle").length > 1) {
     mainGraphPointer
@@ -198,23 +222,7 @@ function drawGraph() {
         .duration('50')
         .style("opacity", 0);
 
-    })
-    .on('click', function (d, i) {
-      div2.transition()
-        .duration(50)
-        .style("opacity", 1);
-
-      div2.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist + "<br>" + "Genre: " + d.Genre
-        + "<br>" + "Year: " + d.Year + "<br>" + "Beats per Minute: " + d.BeatsPerMinute + "<br>"
-        + "Energy: " + d.Energy + "<br>" + "Danceability: " + d.Danceability + "<br>" + "Liveness: "
-        + d.Liveness + "<br>" + "Valence: " + d.Valence + "<br>" + "Duration: " + d.Duration + "<br>"
-        + "Acousticness: " + d.Acousticness + "<br>" + "Speechiness: " + d.Speechiness + "<br>"
-        + "Popularity: " + d.Popularity)
-      //  .style("right", 400 + "px")
-      //  .style("top", 100 + "px");
-    })
-
-    ;
+    });
 
 }
 
@@ -229,24 +237,7 @@ function drawGraph() {
 
 /* MAIN FUNCTION */
 function start() {
-  var s = d3.select("#my_dataviz")
-
-  s.append("text").attr("x", 105).attr("y", 10).text("Legend").style("font-size", "16px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 20).attr("cy", 30).attr("r", 6).style("fill", dotColors["Pop"])
-  s.append("text").attr("x", 30).attr("y", 30).text("Pop").style("font-size", "15px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 20).attr("cy", 50).attr("r", 6).style("fill", dotColors["Rock"])
-  s.append("text").attr("x", 30).attr("y", 50).text("Rock").style("font-size", "15px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 20).attr("cy", 70).attr("r", 6).style("fill", dotColors["Indie"])
-  s.append("text").attr("x", 30).attr("y", 70).text("Indie").style("font-size", "15px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 100).attr("cy", 30).attr("r", 6).style("fill", dotColors["Alternative"])
-  s.append("text").attr("x", 110).attr("y", 30).text("Alternative").style("font-size", "15px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 100).attr("cy", 50).attr("r", 6).style("fill", dotColors["Soul"])
-  s.append("text").attr("x", 110).attr("y", 50).text("Soul").style("font-size", "15px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 100).attr("cy", 70).attr("r", 6).style("fill", dotColors["Other"])
-  s.append("text").attr("x", 110).attr("y", 70).text("Other").style("font-size", "15px").attr("alignment-baseline", "middle")
-  s.append("circle").attr("cx", 200).attr("cy", 30).attr("r", 6).style("fill", dotColors["Hip Hop"])
-  s.append("text").attr("x", 210).attr("y", 30).text("Hip Hop").style("font-size", "15px").attr("alignment-baseline", "middle")
-
+  createLegend();
   var graph = document.getElementById('graph');
 
 
