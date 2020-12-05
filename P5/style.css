@@ -26,6 +26,62 @@ path.domain {
 	text-decoration: underline;
 }
 
+.legend {
+	float: left;
+	border: 2px solid purple;
+	margin-left: 250px;
+}
+
+.attrChooser {
+	margin-top: 20px;
+}
+
+.flex-container {
+	display: flex
+}
+
+.flex-child {
+	flex: 1;
+}
+
+.xlabel {
+	margin-left: 420px;
+	font: 18px sans-serif;
+	fill: black;
+	stroke: purple;
+	stroke-width: 0.5rem;
+}
+
+.chart1 {
+	margin-bottom: 10px;
+}
+
+.inputs {
+	float:left;
+	margin-top: 35px;
+	border-top: 2px solid purple;
+	border-bottom: 2px solid purple;
+	margin-left: 187px;
+}
+
+.selectText {
+	font: 14px sans-serif;
+	font-weight: bold ;
+}
+
+.header {
+	/* margin-left: 900px; */
+	font: 27px sans-serif;
+	text-decoration: underline dashed purple;
+	text-underline-offset: 10px;
+	text-align: center;
+}
+.header2 {
+	/* margin-left: 900px; */
+	font: 14px sans-serif;
+	text-align: center;
+}
+
 .axis {
 	font: 13px sans-serif;
   }
@@ -39,17 +95,7 @@ path.domain {
 #wrapper {
 	clear:both;
 }
-#chart1 {
-    float:left;
-}
-#chart2{
-	float:left;
-}
-#chart3 {
-	float:left;
-	margin-top: 30px;
-	margin-left: 20px;
-}
+
 .brush .extent {
 	fill-opacity: .1;
 	stroke: #fff;

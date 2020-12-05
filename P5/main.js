@@ -4,7 +4,7 @@ window.onload = start;
 var sourceOfTruth = [];
 var currentXscale, currYscale, currXaxis, mainGraphPointer;
 var width = 900;
-var height = 700;
+var height = 720;
 var margin = {
   top: 30,
   bottom: 30,
@@ -27,6 +27,21 @@ dotColors["Hip Hop"] = "DodgerBlue";
 /*                        HELPER FUNCTIONS                   */
 
 ////////////////////////////////////////////////////////////////////////////////
+function addXlabel(whichAxis) {
+  d3.select("#xaxislabel")
+    .append("text")
+    .attr("class", "xlabel")
+      .attr("stroke", "purple")
+      .attr("fill", "black")
+      .attr("stroke-width", 0.5)
+      .text(whichAxis);
+
+  if (document.getElementsByClassName("xlabel").length > 1) {
+    document.getElementsByClassName("xlabel")[0].remove();
+  }
+}
+
+
 function createLegend() {
   var s = d3.select("#my_dataviz")
 
@@ -48,7 +63,8 @@ function createLegend() {
   s.append("circle").attr("cx", 200).attr("cy", 30).attr("r", 6).style("fill", dotColors["Hip Hop"])
   s.append("text").attr("x", 210).attr("y", first).text("Hip Hop").style("font-size", "15px").attr("alignment-baseline", "middle")
 
-  s.attr("transform", "translate(" +  width / 3+" , 30)");
+  s.attr("transform", "translate(45 , 15)");
+  // s.attr("transform", "translate(" +  width / 3+" , 30)"); //Center it under first chart
 }
 
 function removeOldDots() {
@@ -110,6 +126,7 @@ function drawGraph() {
     })]);
     mainGraphPointer.append("g")
       .attr("class", "x axis")
+      .attr("id", "x")
       .attr('transform', 'translate(0,' + (height - margin.top - margin.bottom + 30) + ')')
       .call(currXaxis);
 
@@ -119,6 +136,7 @@ function drawGraph() {
     }) + 1]);
     mainGraphPointer.append("g")
       .attr("class", "x axis")
+      .attr("id", "x")
       .attr('transform', 'translate(0,' + (height - margin.top - margin.bottom + 30) + ')')
       .call(d3.axisBottom(currentXscale)
         .ticks(20)
@@ -126,6 +144,7 @@ function drawGraph() {
       );
   }
   changeAxis(); // DO NOT REMOVE -- End of creating x axis
+  addXlabel(whichAxis);
 
 
   //Start of code to plot dots
@@ -309,6 +328,16 @@ function start() {
       .attr("transform", "translate(" + margin.left + ",0 )")
       .selectAll(".tick text")
       .attr("font-size", "0");
+
+
+      d3.select("#inputs")
+        .append("text")
+        .attr("stroke", "purple")
+        .attr("class", "selectText")
+        .attr("font", "20px sans-serif")
+        .attr("fill", "black")
+        .attr("stroke-width", 0.5)
+        .text("<- Choose which attribute to plot along the X-axis");
 
 
     drawGraph();

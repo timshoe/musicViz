@@ -8,26 +8,31 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
    	</head>
    	<body>
-		   <h1>~Music Correlations~</h1>
-	   	<div id="wrapper">
-			<div>
-				<svg id="my_dataviz" height=100 width=400 align = "center"></svg>
-			  </div>
-			<div id="graph"></div>
-			<div id = "inputs" class = "inputs"> 
-				<select  id="xaxis" onchange="drawGraph()">
-					<option selected value = "Danceability">Danceability of song</option>
-					<option value = "BeatsPerMinute">BPM</option>
-					<option value = "Energy">Energy of song</option>
-					<option value = "Valence">Valence</option>
-					<option value = "Duration">Length of Song (In Seconds)</option>
-					<option value = "Liveness">Liveness</option>
-					<option value = "Acousticness">Acousticness</option>
-					<option value = "Speechiness">Speechiness</option>
-					<option value = "Year">Year</option>
-				</select>
-			</div>
+		<h1 class="header">What Makes Songs Popular?</h1>
+		<h2 class = "header2">*Only songs made after 1999 considered </h2>
+		<div class= "legend">
+			<svg id="my_dataviz" height=100 width=370 align = "center"></svg>
+		</div>
+	   	<div id="wrapper" class="flex-container">
+			<div id="graph" class="flex-child chart1"></div>
+			<div id="graph2" class="flex-child"></div>
 		   </div>
+		   <div id= "xaxislabel"></div>
+		
+		<div id = "inputs" class="inputs">
+			<select  style= "height: 30px;" class = "attrChooser" id="xaxis" onchange="drawGraph()">
+				<option selected value = "Danceability">Danceability of song</option>
+				<option value = "BeatsPerMinute">BPM</option>
+				<option value = "Energy">Energy of song</option>
+				<option value = "Valence">Valence</option>
+				<option value = "Duration">Length of Song (In Seconds)</option>
+				<option value = "Liveness">Liveness</option>
+				<option value = "Acousticness">Acousticness</option>
+				<option value = "Speechiness">Speechiness</option>
+				<option value = "Year">Year</option>
+			</select>
+		</div>
+		
 	</body>
 </html>
 
