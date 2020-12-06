@@ -26,6 +26,11 @@ path.domain {
 	text-decoration: underline;
 }
 
+
+.songBar {
+	font-size: 16px;
+}
+
 .legend {
 	float: left;
 	border: 2px solid purple;
