@@ -296,14 +296,12 @@ function drawBars(index) {
     return barXscale(attr) - 7 + margin.left / 2;
   })
   .attr("y", function (attr) {
-    console.log("Should be the Y value -> " + sourceOfTruth[index][attr] +"\n At index -> "+ index);
     return barYscale(sourceOfTruth[index][attr]);
   })
   .attr("width", "20px")
   .attr("height", function (attr) {
     return (height - margin.bottom) - barYscale(sourceOfTruth[index][attr])
   });
-
 
   d3.select(".barGraph")
     // .attr("class", "songLabels")
