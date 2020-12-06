@@ -243,6 +243,7 @@ function removeOldBars() {
   if (document.getElementsByClassName("barGraph").length >= 1) {
     d3.selectAll("rect")
       .remove();
+    d3.selectAll(".songBar").remove();
   }
 }
 
@@ -303,6 +304,25 @@ function drawBars(index) {
   .attr("height", function (attr) {
     return (height - margin.bottom) - barYscale(sourceOfTruth[index][attr])
   });
+
+
+  d3.select(".barGraph")
+    // .attr("class", "songLabels")
+    .append("text")
+      .attr("class", "songBar")
+      .attr("transform", "translate("+ ((width / 3)) +", 50)")
+      .attr("stroke", "yellow")
+      .attr("fill", "black")
+      .attr("stroke-width", 0.5)
+      .text("Song Name: " + sourceOfTruth[index].Title);
+  d3.select(".barGraph")
+      .append("text")
+      .attr("class", "songBar")
+      .attr("transform", "translate("+ ((width / 3)) +", 70)")
+      .attr("stroke", "darkCyan")
+      .attr("fill", "black")
+      .attr("stroke-width", 0.5)
+      .text("Artist: " + sourceOfTruth[index].Artist);
   
 }
 
