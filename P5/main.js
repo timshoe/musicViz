@@ -293,7 +293,7 @@ function drawBars(index) {
   .attr("class", "bar")
   .attr("fill", dotColors[sourceOfTruth[index]["category"]])
   .attr("x", function (attr) {
-    return barXscale(attr) - 12 + margin.left / 2;
+    return barXscale(attr) - 7 + margin.left / 2;
   })
   .attr("y", function (attr) {
     console.log("Should be the Y value -> " + sourceOfTruth[index][attr] +"\n At index -> "+ index);
@@ -310,7 +310,7 @@ function drawBars(index) {
     .append("text")
       .attr("class", "songBar")
       .attr("transform", "translate("+ ((width / 3)) +", 50)")
-      .attr("stroke", "yellow")
+      .attr("stroke", dotColors[sourceOfTruth[index]["category"]])
       .attr("fill", "black")
       .attr("stroke-width", 0.5)
       .text("Song Name: " + sourceOfTruth[index].Title);
@@ -318,7 +318,7 @@ function drawBars(index) {
       .append("text")
       .attr("class", "songBar")
       .attr("transform", "translate("+ ((width / 3)) +", 80)")
-      .attr("stroke", "darkCyan")
+      .attr("stroke", dotColors[sourceOfTruth[index]["category"]])
       .attr("fill", "black")
       .attr("stroke-width", 0.5)
       .text("Artist: " + sourceOfTruth[index].Artist);
@@ -426,7 +426,7 @@ function drawGraph() {
 
 }
 $(document).ready(function () {
-  $(".chart1").click(function (event) {
+  $("#graph").click(function (event) {
     if (event.target.nodeName != "circle") {
       removeOldBars();
     }
