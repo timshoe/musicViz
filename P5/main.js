@@ -1,9 +1,9 @@
 
-//* All work & code contributed solely by Liam Fernandez and Tim Xu*/
+//* All work & code contributed solely by Liam Fernandez, Tim Xu, and Rebecca Robbins*/
 window.onload = start;
 var sourceOfTruth = [];
 var currentXscale, currYscale, currXaxis, mainGraphPointer; //For scatter plot
-var barGraphPointer; //For scatter plot
+var barXscale, barYscale, barGraphPointer; //For scatter plot
 var width = 900;
 var height = 720;
 var margin = {
@@ -12,6 +12,16 @@ var margin = {
   left: 50,
   right: 50
 };
+
+var categories = {
+  Acousticness: "Acousticness",
+  Speechiness: "Speechiness",
+  Liveness: "Liveness",
+  Danceability: "Danceability",
+  Valence: "Valence",
+  Energy: "Energy",
+  BeatsPerMinute: "Beats per Minute (BPM)"
+}
 
 var dotColors = {
   Pop: "SandyBrown",
@@ -22,6 +32,13 @@ var dotColors = {
   Other: "MediumOrchid"
 }
 dotColors["Hip Hop"] = "DodgerBlue";
+////////////////////////////////////////////////////////////////////////////////
+
+/*                        END OF GLOBAL VARIABLES                   */
+
+////////////////////////////////////////////////////////////////////////////////
+
+
 
 /* MAIN FUNCTION */
 function start() {
@@ -51,14 +68,6 @@ function start() {
     .attr('width', width)
     .attr('height', height);
 
-  // var barGraph = svg2.append('g')
-  //   .attr('width', width - margin.left - margin.left)
-  //   .attr('height', height - margin.top - margin.bottom)
-  //   .attr("x", "" + width+ "")
-  //   .attr("y", "0");
-
-  
-
   d3.csv("./songattributes.csv", function (csv) {
     csv.Title = String(csv.Title);
     csv.Artist = String(csv.Artist);
@@ -81,6 +90,8 @@ function start() {
     currentXscale = xScale;
     currXaxis = xAxis;
     currYscale = yScale;
+
+    barGraphPointer = svg2;
 
 
     // ! Set up Y-axis before drawing graph
@@ -122,15 +133,6 @@ function start() {
         drawGraph();
     // Start of Plotting Axes for second graph
     
-    var categories = {
-      Acousticness: "Acousticness",
-      Speechiness: "Speechiness",
-      Liveness: "Liveness",
-      Danceability: "Danceability",
-      Valence: "Valence",
-      Energy: "Energy",
-      BeatsPerMinute: "Beats per Minute (BPM)"
-    }
 
     
     var xScale2 = d3.scaleBand()
@@ -139,7 +141,7 @@ function start() {
     
     var yScale2 = d3.scaleLinear().range([height - margin.top, margin.bottom]);
     
-    yScale2.domain([0, 100]);
+    yScale2.domain([0, 110]);
 
     var yAxis2 = d3.axisLeft(yScale2);
     console.log(Object.keys(categories));
@@ -148,6 +150,9 @@ function start() {
     var xAxis2 = d3.axisBottom(xScale2)
       .tickSize(10)
       .scale(xScale2);
+
+      barYscale = yScale2;
+      barXscale = xScale2;
 
 
 
@@ -166,7 +171,7 @@ function start() {
       .text("Value of attribute");
     //Making the lines that go right of the x axis || GRID LINES
     svg2.append("g")
-      .call(d3.axisLeft(yScale2).ticks(10).tickSize(-width + (margin.right * 2)))
+      .call(d3.axisLeft(yScale2).ticks(10).tickSize(-width + (margin.right)))
       .attr("opacity", 0.2)
       .attr("transform", "translate(" + margin.left + ",0 )")
       .selectAll(".tick text")
@@ -176,13 +181,6 @@ function start() {
       .attr("class", "axis")
       .attr("transform", "translate(0,"+(height - margin.bottom) +")")
       .call(xAxis2);
-
-
-  
-  
-
-    
-
   });
 }
 
@@ -241,6 +239,12 @@ function removeOldDots() {
   }
 }
 
+function removeOldBars() {
+  if (document.getElementsByClassName("barGraph").length > 1) {
+    document.getElementsByClassName("barGraph")
+  }
+}
+
 function grabAxis() {
   var axisChoiceBox = d3.select('#xaxis').node();
   var choice = axisChoiceBox.options[axisChoiceBox.selectedIndex].value;
@@ -275,6 +279,30 @@ function translateGenre(genre) {
   }
   return categoryToReturn;
 
+}
+
+function drawBars(index) {
+  console.log("THIS WORKED");
+  barGraphPointer.append("g")
+  .attr("class", "barGraph")
+  .selectAll("bar")
+  .data(Object.keys(categories))
+  .enter().append("rect")
+  .attr("class", "bar")
+  .attr("fill", dotColors[sourceOfTruth[index]["category"]])
+  .attr("x", function (attr) {
+    return barXscale(attr) + margin.left / 2;
+  })
+  .attr("y", function (attr) {
+    console.log("Should be the Y value -> " + sourceOfTruth[index][attr] +"\n At index -> "+ index);
+    return barYscale(sourceOfTruth[index][attr]);
+  })
+  .attr("width", "20px")
+  .attr("height", function (attr) {
+    return (height - margin.bottom) - barYscale(sourceOfTruth[index][attr])
+  });
+  removeOldBars();
+  
 }
 
 function drawGraph() {
@@ -346,6 +374,9 @@ function drawGraph() {
           return currYscale(d.Popularity);
       })
       .attr("r", 4)
+      .on("click", function (d,i) {
+        drawBars(i);
+      })
       //End of code to plot points
       .on('mouseover', function(d, i) {
         d3.select(this).transition()
@@ -369,7 +400,9 @@ function drawGraph() {
         .duration('50')
         .style("opacity", 0);
 
-    });
+    })
+    
+    ;
 
 }
 
