@@ -141,7 +141,7 @@ function start() {
     
     var yScale2 = d3.scaleLinear().range([height - margin.top, margin.bottom]);
     
-    yScale2.domain([0, 110]);
+    yScale2.domain([0, 200]);
 
     var yAxis2 = d3.axisLeft(yScale2);
     console.log(Object.keys(categories));
