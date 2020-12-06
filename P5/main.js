@@ -2,7 +2,8 @@
 //* All work & code contributed solely by Liam Fernandez and Tim Xu*/
 window.onload = start;
 var sourceOfTruth = [];
-var currentXscale, currYscale, currXaxis, mainGraphPointer;
+var currentXscale, currYscale, currXaxis, mainGraphPointer; //For scatter plot
+var barGraphPointer; //For scatter plot
 var width = 900;
 var height = 720;
 var margin = {
@@ -21,6 +22,171 @@ var dotColors = {
   Other: "MediumOrchid"
 }
 dotColors["Hip Hop"] = "DodgerBlue";
+
+/* MAIN FUNCTION */
+function start() {
+  createLegend();
+  var graph = document.getElementById('graph');
+  // var graph2 = document.getElementById('graph2');
+
+
+  var svg = d3.select(graph)
+    .append('svg')
+    .attr("class", "chart1")
+    .attr('width', width)
+    .attr('height', height);
+
+  var mainGraph = svg.append('g')
+    .attr('width', width - margin.left - margin.left)
+    .attr('height', height - margin.top - margin.bottom);
+
+  var xScale = d3.scaleLinear().range([margin.left, width - margin.right]);
+  var yScale = d3.scaleLinear().range([height - margin.top, margin.bottom]);
+
+  var yAxis = d3.axisLeft(yScale);
+  var xAxis = d3.axisBottom(xScale);
+
+  var svg2 = d3.select(graph)
+    .append("svg")
+    .attr('width', width)
+    .attr('height', height);
+
+  // var barGraph = svg2.append('g')
+  //   .attr('width', width - margin.left - margin.left)
+  //   .attr('height', height - margin.top - margin.bottom)
+  //   .attr("x", "" + width+ "")
+  //   .attr("y", "0");
+
+  
+
+  d3.csv("./songattributes.csv", function (csv) {
+    csv.Title = String(csv.Title);
+    csv.Artist = String(csv.Artist);
+    csv.Genre = String(csv.Genre);
+    csv.Year = Number(csv.Year); // This is default x-axis value
+    csv.BeatsPerMinute = Number(csv.BeatsPerMinute);
+    csv.Energy = Number(csv.Energy);
+    csv.Danceability = Number(csv.Danceability);
+    csv.Liveness = Number(csv.Liveness);
+    csv.Valence = Number(csv.Valence);
+    csv.Duration = Number(csv.Duration);
+    csv.Acousticness = Number(csv.Acousticness);
+    csv.Speechiness = Number(csv.Speechiness);
+    csv.Popularity = Number(csv.Popularity);
+    csv["category"] = translateGenre(String(csv.Genre));
+    return csv;
+  }, function (error, data) {
+    mainGraphPointer = mainGraph;
+    sourceOfTruth = data;
+    currentXscale = xScale;
+    currXaxis = xAxis;
+    currYscale = yScale;
+
+
+    // ! Set up Y-axis before drawing graph
+    yScale.domain([0, d3.max(data, function (d) {
+      return d.Popularity;
+    })]); // Scatter plot
+
+    mainGraph.append('g')
+      .attr('class', 'y axis')
+      .attr('transform', 'translate(' + margin.left + ',0)')
+      .call(yAxis)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 7)
+      .attr("x", -(5 * margin.left))
+      .attr("dy", "-3.3em")
+      .attr("stroke", "purple")
+      .attr("fill", "black")
+      .attr("stroke-width", 0.5)
+      .text("Popularity of Song");
+    //Making the lines that go right of the x axis || GRID LINES
+    mainGraph.append('g')
+      .call(d3.axisLeft(yScale).ticks(10).tickSize(-width + (margin.right * 2)))
+      .attr("opacity", 0.2)
+      .attr("transform", "translate(" + margin.left + ",0 )")
+      .selectAll(".tick text")
+      .attr("font-size", "0");
+
+
+      d3.select("#inputs")
+        .append("text")
+        .attr("stroke", "purple")
+        .attr("class", "selectText")
+        .attr("font", "20px sans-serif")
+        .attr("fill", "black")
+        .attr("stroke-width", 0.5)
+        .text("<- Choose which attribute to plot along the X-axis");
+
+        drawGraph();
+    // Start of Plotting Axes for second graph
+    
+    var categories = {
+      Acousticness: "Acousticness",
+      Speechiness: "Speechiness",
+      Liveness: "Liveness",
+      Danceability: "Danceability",
+      Valence: "Valence",
+      Energy: "Energy",
+      BeatsPerMinute: "Beats per Minute (BPM)"
+    }
+
+    
+    var xScale2 = d3.scaleBand()
+		.range([margin.left, (width)])
+    .padding(0.5);
+    
+    var yScale2 = d3.scaleLinear().range([height - margin.top, margin.bottom]);
+    
+    yScale2.domain([0, 100]);
+
+    var yAxis2 = d3.axisLeft(yScale2);
+    console.log(Object.keys(categories));
+    xScale2.domain(Object.keys(categories).sort());
+    
+    var xAxis2 = d3.axisBottom(xScale2)
+      .tickSize(10)
+      .scale(xScale2);
+
+
+
+    svg2.append("g")
+      .attr("transform", "translate(" +  margin.left+ ",0)")
+      .attr("class", "axis")
+      .call(yAxis2)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 7)
+      .attr("x", -(5 * margin.left))
+      .attr("dy", "-3.3em")
+      .attr("stroke", "purple")
+      .attr("fill", "black")
+      .attr("stroke-width", 0.5)
+      .text("Value of attribute");
+    //Making the lines that go right of the x axis || GRID LINES
+    svg2.append("g")
+      .call(d3.axisLeft(yScale2).ticks(10).tickSize(-width + (margin.right * 2)))
+      .attr("opacity", 0.2)
+      .attr("transform", "translate(" + margin.left + ",0 )")
+      .selectAll(".tick text")
+      .attr("font-size", "0");
+      
+      svg2.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(0,"+(height - margin.bottom) +")")
+      .call(xAxis2);
+
+
+  
+  
+
+    
+
+  });
+}
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -147,48 +313,11 @@ function drawGraph() {
   addXlabel(whichAxis);
 
 
-  //Start of code to plot dots
-  removeOldDots();
-  var circles1 = mainGraphPointer
-    .selectAll("circle")
-    .data(sourceOfTruth)
-    .enter()
-    .append("circle")
-    .attr("class", "circle")
-    .attr("id", function (d, i) {
-      return i;
-    })
-    .attr("fill", function (d) {
-      console.log("Category -> " + d.category)
-      return dotColors[d["category"]];
-    })
-    .attr("stroke", "black")
-    .attr("cx", function (d) {
-      if (d.Year > 1999) {
-        return currentXscale(d[whichAxis]);
-      }
-    })
-    .attr("cy", function (d) {
-      if (d.Year > 1999) {
-        return currYscale(d.Popularity);
-
-      }
-    })
-    .attr("r", 4);
-  //End of code to plot points
-
 
   var div = d3
     .select("#graph")
     .append("div")
     .attr("class", "song-info")
-    .style("opacity", 0);
-
-  var div2 = d3
-    .select("#graph")
-    .append("div")
-    .attr("class", "all-song-info")
-    .attr("x", 1000)
     .style("opacity", 0);
 
 
@@ -207,7 +336,6 @@ function drawGraph() {
         return i;
       })
       .attr("fill", function (d) {
-        console.log("Category -> " + d.category)
         return dotColors[d["category"]];
       })
       .attr("stroke", "black")
@@ -228,7 +356,7 @@ function drawGraph() {
         .duration(50)
         .style("opacity", 1);
 
-      div.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist)
+      div.html("Title: " + d.Title + "<br>" + "Artist: " + d.Artist + "<br>" + "Click for more details")
         .style("left", (d3.event.pageX + 10) + "px")
         .style("top", (d3.event.pageY - 15) + "px");
 
@@ -251,95 +379,3 @@ function drawGraph() {
 /*                        END OF HELPER FUNCTIONS                   */
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
-
-/* MAIN FUNCTION */
-function start() {
-  createLegend();
-  var graph = document.getElementById('graph');
-
-
-  var svg = d3.select(graph)
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height);
-
-  var mainGraph = svg.append('g')
-    .attr('width', width - margin.left - margin.left)
-    .attr('height', height - margin.top - margin.bottom);
-
-  var xScale = d3.scaleLinear().range([margin.left, width - margin.right]);
-  var yScale = d3.scaleLinear().range([height - margin.top, margin.bottom]);
-
-  var yAxis = d3.axisLeft(yScale);
-  var xAxis = d3.axisBottom(xScale);
-
-  d3.csv("./songattributes.csv", function (csv) {
-    csv.Title = String(csv.Title);
-    csv.Artist = String(csv.Artist);
-    csv.Genre = String(csv.Genre);
-    csv.Year = Number(csv.Year); // This is default x-axis value
-    csv.BeatsPerMinute = Number(csv.BeatsPerMinute);
-    csv.Energy = Number(csv.Energy);
-    csv.Danceability = Number(csv.Danceability);
-    csv.Liveness = Number(csv.Liveness);
-    csv.Valence = Number(csv.Valence);
-    csv.Duration = Number(csv.Duration);
-    csv.Acousticness = Number(csv.Acousticness);
-    csv.Speechiness = Number(csv.Speechiness);
-    csv.Popularity = Number(csv.Popularity);
-    csv["category"] = translateGenre(String(csv.Genre));
-    return csv;
-  }, function (error, data) {
-    mainGraphPointer = mainGraph;
-    sourceOfTruth = data;
-    currentXscale = xScale;
-    currXaxis = xAxis;
-    currYscale = yScale;
-
-    console.log("Line 2 test of source of truth: " + sourceOfTruth[1].category);
-
-
-
-    // ! Set up Y-axis before drawing graph
-    yScale.domain([0, d3.max(data, function (d) {
-      return d.Popularity;
-    })]);
-    // yScale.domain
-
-    mainGraph.append('g')
-      .attr('class', 'y axis')
-      .attr('transform', 'translate(' + margin.left + ',0)')
-      .call(yAxis)
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 7)
-      .attr("x", -(5 * margin.left))
-      .attr("dy", "-3.3em")
-      .attr("stroke", "purple")
-      .attr("fill", "black")
-      .attr("stroke-width", 0.5)
-      .text("Popularity of Song");
-    //Making the lines that go right of the x axis || GRID LINES
-    mainGraph.append('g')
-      .call(d3.axisLeft(yScale).ticks(10).tickSize(-width + (margin.right * 2)))
-      .attr("opacity", 0.2)
-      .attr("transform", "translate(" + margin.left + ",0 )")
-      .selectAll(".tick text")
-      .attr("font-size", "0");
-
-
-      d3.select("#inputs")
-        .append("text")
-        .attr("stroke", "purple")
-        .attr("class", "selectText")
-        .attr("font", "20px sans-serif")
-        .attr("fill", "black")
-        .attr("stroke-width", 0.5)
-        .text("<- Choose which attribute to plot along the X-axis");
-
-
-    drawGraph();
-  });
-}

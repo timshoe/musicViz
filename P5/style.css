@@ -55,6 +55,9 @@ path.domain {
 .chart1 {
 	margin-bottom: 10px;
 }
+.chart2 {
+	
+}
 
 .inputs {
 	float:left;
@@ -80,6 +83,11 @@ path.domain {
 	/* margin-left: 900px; */
 	font: 14px sans-serif;
 	text-align: center;
+}
+
+.chart1
+{
+	margin-right: 100px;
 }
 
 .axis {
