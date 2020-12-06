@@ -141,7 +141,7 @@ function start() {
     
     var yScale2 = d3.scaleLinear().range([height - margin.top, margin.bottom]);
     
-    yScale2.domain([0, 200]);
+    yScale2.domain([0, 210]);
 
     var yAxis2 = d3.axisLeft(yScale2);
     console.log(Object.keys(categories));
@@ -284,7 +284,6 @@ function translateGenre(genre) {
 }
 
 function drawBars(index) {
-  console.log("THIS WORKED");
   removeOldBars();
   barGraphPointer.append("g")
   .attr("class", "barGraph")
@@ -318,7 +317,7 @@ function drawBars(index) {
   d3.select(".barGraph")
       .append("text")
       .attr("class", "songBar")
-      .attr("transform", "translate("+ ((width / 3)) +", 70)")
+      .attr("transform", "translate("+ ((width / 3)) +", 80)")
       .attr("stroke", "darkCyan")
       .attr("fill", "black")
       .attr("stroke-width", 0.5)
@@ -427,7 +426,7 @@ function drawGraph() {
 
 }
 $(document).ready(function () {
-  $("div").click(function (event) {
+  $("svg").click(function (event) {
     if (event.target.nodeName != "circle") {
       removeOldBars();
     }
