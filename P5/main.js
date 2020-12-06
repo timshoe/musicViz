@@ -240,8 +240,9 @@ function removeOldDots() {
 }
 
 function removeOldBars() {
-  if (document.getElementsByClassName("barGraph").length > 1) {
-    document.getElementsByClassName("barGraph")
+  if (document.getElementsByClassName("barGraph").length >= 1) {
+    d3.selectAll("rect")
+      .remove();
   }
 }
 
@@ -283,6 +284,7 @@ function translateGenre(genre) {
 
 function drawBars(index) {
   console.log("THIS WORKED");
+  removeOldBars();
   barGraphPointer.append("g")
   .attr("class", "barGraph")
   .selectAll("bar")
@@ -291,7 +293,7 @@ function drawBars(index) {
   .attr("class", "bar")
   .attr("fill", dotColors[sourceOfTruth[index]["category"]])
   .attr("x", function (attr) {
-    return barXscale(attr) + margin.left / 2;
+    return barXscale(attr) - 12 + margin.left / 2;
   })
   .attr("y", function (attr) {
     console.log("Should be the Y value -> " + sourceOfTruth[index][attr] +"\n At index -> "+ index);
@@ -301,7 +303,6 @@ function drawBars(index) {
   .attr("height", function (attr) {
     return (height - margin.bottom) - barYscale(sourceOfTruth[index][attr])
   });
-  removeOldBars();
   
 }
 
