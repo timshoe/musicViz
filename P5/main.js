@@ -426,7 +426,7 @@ function drawGraph() {
 
 }
 $(document).ready(function () {
-  $(".chart1").click(function (event) {
+  $("#graph").click(function (event) {
     if (event.target.nodeName != "circle") {
       removeOldBars();
     }
