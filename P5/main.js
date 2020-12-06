@@ -406,6 +406,13 @@ function drawGraph() {
     ;
 
 }
+$(document).ready(function () {
+  $("div").click(function (event) {
+    if (event.target.nodeName != "circle") {
+      removeOldBars();
+    }
+  });
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////
