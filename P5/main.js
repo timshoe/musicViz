@@ -50,6 +50,7 @@ function start() {
   var svg = d3.select(graph)
     .append('svg')
     .attr("class", "chart1")
+    .attr("id", "chartOne")
     .attr('width', width)
     .attr('height', height);
 
@@ -426,7 +427,7 @@ function drawGraph() {
 
 }
 $(document).ready(function () {
-  $("#graph").click(function (event) {
+  $("#chartOne").click(function (event) {
     if (event.target.nodeName != "circle") {
       removeOldBars();
     }
