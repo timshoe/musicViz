@@ -426,7 +426,7 @@ function drawGraph() {
 
 }
 $(document).ready(function () {
-  $("svg").click(function (event) {
+  $("div").click(function (event) {
     if (event.target.nodeName != "circle") {
       removeOldBars();
     }
